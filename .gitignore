@@ -1,0 +1,17 @@
+# Private keys
+*.key
+*.pem
+id_rsa
+id_ed25519
+
+# Real WireGuard configs may contain PrivateKey
+wg0.conf
+
+# Temporary/editor files
+*.swp
+*.tmp
+*~
+
+# System files
+.DS_Store
+Thumbs.db

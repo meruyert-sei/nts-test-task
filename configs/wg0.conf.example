@@ -1,0 +1,4 @@
+[Interface]
+Address = 10.10.10.1/24
+ListenPort = 51820
+PrivateKey = <REDACTED>
