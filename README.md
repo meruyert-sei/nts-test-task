@@ -1,76 +1,106 @@
-# Network and System Administration Test Assignment
+# Тестовое задание системного администратора
 
-This repository contains the configuration and documentation created as part of a system and network administration test assignment.
+В данном репозитории собраны конфигурационные файлы, документация и скриншоты, подготовленные в рамках тестового задания по системному и сетевому администрированию.
 
-## Environment
+## Окружение
 
-- Hypervisor: Proxmox VE
-- Virtual machine: Ubuntu Server
-- Hostname: `ubuntu-test`
-- Administration: SSH
-- Version control: Git
+- Гипервизор: Proxmox VE 9.2.2
+- Виртуальная машина: Ubuntu Server
+- Имя сервера: `ubuntu-test`
+- Удалённое администрирование: SSH
 - VPN: WireGuard
+- Система контроля версий: Git
+- Репозиторий: GitHub
 
-## Network Configuration
+## Настройка сети
 
-The virtual machine uses the following network configuration:
+На сервере настроен статический IPv4-адрес:
 
-- Main interface: `ens18`
-- Management IP: `192.168.243.135/24`
-- Gateway: `192.168.243.2`
+- основной интерфейс: `ens18`
+- IP-адрес: `192.168.243.135/24`
+- шлюз: `192.168.243.2`
+
+На физическом интерфейсе `ens18` созданы два VLAN-интерфейса:
+
 - VLAN 10: `192.168.10.1/24`
 - VLAN 20: `192.168.20.1/24`
 
-VLAN 10 and VLAN 20 are configured on the physical interface `ens18`
-using IEEE 802.1Q VLAN tagging.
+VLAN позволяют логически разделять одну физическую сеть на отдельные сетевые сегменты. Например, VLAN 10 можно использовать для рабочих станций сотрудников, а VLAN 20 — для серверов или другого типа устройств.
 
-The Netplan configuration example is available in:
+Пример конфигурации Netplan:
 
 `configs/netplan.yaml`
 
-Additional information about the network configuration is available in:
+Подробное описание:
 
 `docs/network-description.md`
 
-## WireGuard VPN
+## Удалённый доступ
 
-WireGuard is configured to provide secure remote access to the Ubuntu server.
+Для удалённого администрирования Ubuntu Server настроен SSH-доступ с аутентификацией по SSH-ключу.
 
-Server configuration:
+Подключение выполняется под пользователем `sysadmin`.
 
-- Interface: `wg0`
-- Server VPN address: `10.10.10.1/24`
-- Client VPN address: `10.10.10.2/32`
-- UDP port: `51820`
+Дополнительно установлен и настроен VPN-сервер WireGuard.
 
-The WireGuard service is managed using `wg-quick`.
+Параметры VPN:
 
-For security reasons, the real WireGuard private key is not stored in this repository.
-A sanitized configuration example is available in:
+- интерфейс: `wg0`
+- адрес сервера: `10.10.10.1/24`
+- адрес клиента: `10.10.10.2/32`
+- UDP-порт: `51820`
+
+Клиент WireGuard настроен на Windows-хосте.
+
+Работоспособность VPN проверена с Windows-хоста: после подключения к VPN адрес сервера `10.10.10.1` доступен с клиента. Также проверено SSH-подключение к серверу через VPN-туннель.
+
+В целях безопасности реальные приватные SSH- и WireGuard-ключи в репозитории не хранятся. В примере конфигурации WireGuard приватный ключ заменён на `<REDACTED>`.
+
+Пример конфигурации:
 
 `configs/wg0.conf.example`
 
-The VPN connection was verified using a WireGuard handshake, ICMP ping,
-and SSH access to `10.10.10.1`.
+Подробное описание:
 
-## Virtualization
+`docs/remote-access.md`
 
-The Ubuntu Server virtual machine runs on Proxmox VE using KVM/QEMU virtualization.
+## Виртуализация
 
-Additional information is available in:
+Для выполнения задания установлен Proxmox VE 9.2.2.
+
+В Proxmox создана виртуальная машина:
+
+- VM ID: `100`
+- имя: `ubuntu-test`
+- ОС: Ubuntu Server
+- CPU: 1 vCPU
+- RAM: 2 GiB
+- диск: 10 GiB
+- виртуализация: KVM/QEMU
+
+Виртуальная машина успешно запускается и используется для выполнения сетевой части задания, настройки SSH и WireGuard.
+
+Подробное описание:
 
 `docs/virtualization-description.md`
 
-## Repository Structure
+Скриншот работающей виртуальной машины в интерфейсе Proxmox:
 
-- `configs/` - network and VPN configuration examples
-- `docs/` - documentation
-- `screenshots/` - screenshots demonstrating the completed configuration
-- `.gitignore` - prevents private keys and sensitive files from being committed
+`screenshots/proxmox-ubuntu-vm.png`
 
-## Security
+## Структура репозитория
 
-Private SSH and WireGuard keys are not stored in the repository.
+- `configs/` — примеры конфигурационных файлов сети и VPN
+- `docs/` — текстовое описание выполненной настройки
+- `screenshots/` — скриншоты, подтверждающие выполненную конфигурацию
+- `.gitignore` — исключение приватных ключей и других чувствительных файлов
 
-Remote administration is performed over SSH.
-A separate SSH key is used for authentication with GitHub.
+## Безопасность
+
+Приватные SSH- и WireGuard-ключи не хранятся в Git-репозитории.
+
+Для подключения сервера к GitHub используется отдельный SSH-ключ.
+
+## Видеодемонстрация
+
+Ссылка на видеодемонстрацию будет добавлена после записи видео.
